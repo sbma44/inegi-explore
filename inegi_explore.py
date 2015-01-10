@@ -30,13 +30,16 @@ def dir_walk(ftp, path, collection):
             if line_parts[0][0] == 'd':
                 q.put(this_path)
 
-            x['file'] = (line_parts[0] != 'd')
+            x['file'] = (line_parts[0][0] != 'd')
             
     
     while not q.empty():
         current_path = q.get()
-        ftp.cwd(current_path)
-        ftp.retrlines('LIST', process_lines)
+        try:
+            ftp.cwd(current_path)
+            ftp.retrlines('LIST', process_lines)
+        except:
+            continue
 
     return collection
 
